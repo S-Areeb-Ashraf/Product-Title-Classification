@@ -136,7 +136,7 @@ project_folder/
 ### 3. Run the script
 
 ```bash
-python product_title_clf.py
+python task.py
 ```
 
 ---
