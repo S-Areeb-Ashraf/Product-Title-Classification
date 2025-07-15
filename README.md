@@ -102,7 +102,7 @@ Final RMSE (Conciseness): 0.064612
 ### 1. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install pandas numpy lightgbm xgboost scikit-learn scipy
 ```
 
 <details>
