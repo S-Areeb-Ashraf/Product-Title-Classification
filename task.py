@@ -37,14 +37,9 @@ def extract_numeric_features(df):
         'num_tags': df['short_desc'].apply(lambda x: len(re.findall(r'<[^>]+>', str(x))))
     })
 
-# num_cols=train_df.select_dtypes(include=[np.number]).columns.tolist()
-# print(num_cols)
 X_num=extract_numeric_features(train_df)
-# print(X_num)
 X_valid_num=extract_numeric_features(valid_df)
 
-# Step 4: TF-IDF
-print("Generating TF-IDF features...")
 tfidf_title=TfidfVectorizer(ngram_range=(1, 2), max_features=1000)
 tfidf_desc=TfidfVectorizer(ngram_range=(1, 2), max_features=1000)
 tfidf_cat=TfidfVectorizer(ngram_range=(1, 1), max_features=300)
@@ -60,32 +55,9 @@ X_valid_cat = tfidf_cat.transform(valid_df['cat_combined'])
 X_all = hstack([X_title, X_desc, X_cat, csr_matrix(X_num.values)])
 X_valid = hstack([X_valid_title, X_valid_desc, X_valid_cat, csr_matrix(X_valid_num.values)])
 
-# # Step 5: Base Model Evaluation
-# print("\nEvaluating individual base models without Word2Vec...")
-# true_clarity = pd.read_csv('validation/clarity_valid.predict', header=None).squeeze()
-# true_concise = pd.read_csv('validation/conciseness_valid.predict', header=None).squeeze()
 
-# base_models_eval = {
-#     'LGB': lgb.LGBMRegressor(n_estimators=200, learning_rate=0.05),
-#     'Ridge': Ridge(alpha=1.0),
-#     'LogReg': make_pipeline(MaxAbsScaler(), LogisticRegression(max_iter=1000)),
-#     'SGD': make_pipeline(MaxAbsScaler(), SGDRegressor(max_iter=1000, tol=1e-3)),
-# }
+# Applying k-fold and other models
 
-# for name, model in base_models_eval.items():
-#     model.fit(X_all, clarity_y)
-#     pred_c = model.predict(X_valid)
-#     model.fit(X_all, concise_y)
-#     pred_s = model.predict(X_valid)
-#     rmse_c = mean_squared_error(true_clarity, pred_c)
-#     rmse_s = mean_squared_error(true_concise, pred_s)
-#     print(f"{name}: Clarity RMSE = {rmse_c:.4f}, Conciseness RMSE = {rmse_s:.4f}")
-
-# # Final output (can extend to XGBoost stacked model if needed)
-# print("\nModel evaluation completed.")
-
-
-# Step 6: KFold + Base Models
 kf_sets = 4
 n_splits = 10
 base_models = ['lgb', 'ridge', 'logreg', 'sgd']
@@ -156,7 +128,7 @@ meta_s.fit(X_meta_concise, true_concise)
 final_clarity = meta_c.predict(X_meta_clarity)
 final_concise = meta_s.predict(X_meta_concise)
 
-# Step 8: Final Evaluation
+#  Final result
 rmse_c = mean_squared_error(true_clarity, final_clarity)
 rmse_s = mean_squared_error(true_concise, final_concise)
 
