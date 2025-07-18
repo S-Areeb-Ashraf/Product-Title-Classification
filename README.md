@@ -105,19 +105,6 @@ Final RMSE (Conciseness): 0.064612
 pip install pandas numpy lightgbm xgboost scikit-learn scipy
 ```
 
-<details>
-<summary><code>requirements.txt</code></summary>
-
-```txt
-pandas
-numpy
-scikit-learn
-xgboost
-lightgbm
-scipy
-```
-
-</details>
 
 ### 2. Prepare directory structure
 
